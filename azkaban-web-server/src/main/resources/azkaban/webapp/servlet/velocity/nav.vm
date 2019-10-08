@@ -101,7 +101,7 @@
   <div class="container-full">
     <div class="navbar-header">
       <div class="navbar-logo">
-        <a href="${context}/">Azkaban</a>
+        <a href="${context}/">CEPtor</a>
         <div class="navbar-version">
           ${version}
         </div>
