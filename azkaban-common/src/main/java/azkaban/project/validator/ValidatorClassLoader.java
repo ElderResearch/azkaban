@@ -3,6 +3,7 @@ package azkaban.project.validator;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.jar.JarFile;
-import sun.net.www.protocol.jar.JarURLConnection;
 
 /**
  * Workaround for jdk 6 disgrace with open jar files & native libs, which is a reason of
