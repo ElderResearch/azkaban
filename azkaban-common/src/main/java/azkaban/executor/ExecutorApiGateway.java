@@ -73,7 +73,6 @@ public class ExecutorApiGateway {
         paramList.addAll(Arrays.asList(params));
       }
 
-      paramList.add(new Pair<>(ConnectorParams.ACTION_PARAM, action));
       if (executionId != null) {
     	  paramList.add(new Pair<>(ConnectorParams.EXECID_PARAM, String.valueOf(executionId)));
       }
@@ -81,7 +80,7 @@ public class ExecutorApiGateway {
     	  paramList.add(new Pair<>(ConnectorParams.USER_PARAM, user));  
       }
 
-      return callForJsonObjectMap(host, port, "/executor", paramList);
+      return callForJsonObjectMap(host, port, "/executor/" + action, paramList);
     } catch (final IOException e) {
       throw new ExecutorManagerException(e);
     }

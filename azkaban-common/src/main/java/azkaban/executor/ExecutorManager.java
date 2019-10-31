@@ -1021,7 +1021,7 @@ public class ExecutorManager extends EventHandler implements
     }
 
     paramList
-        .add(new Pair<>(ConnectorParams.ACTION_PARAM, action));
+        .add(new Pair<>(ConnectorParams.STATS_ACTION, action));
 
     return this.apiGateway.callForJsonObjectMap(executor.getHost(), executor.getPort(),
         "/stats", paramList);

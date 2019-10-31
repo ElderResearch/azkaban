@@ -19,7 +19,6 @@ package azkaban.executor;
 public interface ConnectorParams {
 
   public static final String EXECUTOR_ID_PARAM = "executorId";
-  public static final String ACTION_PARAM = "action";
   public static final String EXECID_PARAM = "execid";
   public static final String SHAREDTOKEN_PARAM = "token";
   public static final String USER_PARAM = "user";
@@ -86,6 +85,7 @@ public interface ConnectorParams {
   public static final String JMX_GET_ALL_EXECUTOR_ATTRIBUTES = "getAllExecutorAttributes";
   public static final String JMX_HOSTPORT = "hostPort";
 
+  public static final String STATS_ACTION = "action";
   public static final String STATS_GET_ALLMETRICSNAME = "getAllMetricNames";
   public static final String STATS_GET_METRICHISTORY = "getMetricHistory";
   public static final String STATS_SET_REPORTINGINTERVAL = "changeMetricInterval";

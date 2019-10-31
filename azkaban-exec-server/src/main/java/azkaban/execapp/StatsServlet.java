@@ -86,8 +86,8 @@ public class StatsServlet extends HttpServlet implements ConnectorParams {
       throws ServletException, IOException {
     final Map<String, Object> ret = new HashMap<>();
 
-    if (hasParam(req, ACTION_PARAM)) {
-      final String action = getParam(req, ACTION_PARAM);
+    if (hasParam(req, STATS_ACTION)) {
+      final String action = getParam(req, STATS_ACTION);
       if (action.equals(STATS_SET_REPORTINGINTERVAL)) {
         handleChangeMetricInterval(req, ret);
       } else if (action.equals(STATS_SET_CLEANINGINTERVAL)) {

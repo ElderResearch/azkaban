@@ -62,7 +62,7 @@ public class StatsServlet extends LoginAbstractAzkabanServlet {
       final Session session)
       throws ServletException,
       IOException {
-    if (hasParam(req, ConnectorParams.ACTION_PARAM)) {
+    if (hasParam(req, ConnectorParams.STATS_ACTION)) {
       handleAJAXAction(req, resp, session);
     } else {
       handleStatePageLoad(req, resp, session);
@@ -74,7 +74,7 @@ public class StatsServlet extends LoginAbstractAzkabanServlet {
       throws ServletException, IOException {
     final HashMap<String, Object> ret = new HashMap<>();
     final int executorId = getIntParam(req, ConnectorParams.EXECUTOR_ID_PARAM);
-    final String actionName = getParam(req, ConnectorParams.ACTION_PARAM);
+    final String actionName = getParam(req, ConnectorParams.STATS_ACTION);
 
     if (actionName.equals(ConnectorParams.STATS_GET_METRICHISTORY)) {
       handleGetMetricHistory(executorId, req, ret, session.getUser());

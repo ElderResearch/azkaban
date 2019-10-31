@@ -96,12 +96,9 @@ public class ExecutorServlet extends HttpServlet implements ConnectorParams {
   public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp)
       throws IOException {
     final HashMap<String, Object> respMap = new HashMap<>();
+    
+    final String action = req.getPathInfo();
     try {
-      if (!hasParam(req, ConnectorParams.ACTION_PARAM)) {
-        logger.error("Parameter action not set");
-        respMap.put("error", "Parameter action not set");
-      } else {
-        final String action = getParam(req, ConnectorParams.ACTION_PARAM);
         if (action.equals(ConnectorParams.UPDATE_ACTION)) {
           handleAjaxUpdateRequest(req, respMap);
         } else if (action.equals(ConnectorParams.PING_ACTION)) {
@@ -153,7 +150,6 @@ public class ExecutorServlet extends HttpServlet implements ConnectorParams {
             respMap.put("error", "action: '" + action + "' not supported.");
           }
         }
-      }
     } catch (final Exception e) {
       logger.error(e.getMessage(), e);
       respMap.put(ConnectorParams.RESPONSE_ERROR, e.getMessage());
