@@ -16,17 +16,21 @@
 
 package azkaban.executor;
 
-import azkaban.utils.JSONUtils;
-import azkaban.utils.Pair;
-import com.google.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Singleton;
+
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.google.inject.Inject;
+
+import azkaban.utils.JSONUtils;
+import azkaban.utils.Pair;
 
 @Singleton
 public class ExecutorApiGateway {
@@ -69,11 +73,13 @@ public class ExecutorApiGateway {
         paramList.addAll(Arrays.asList(params));
       }
 
-      paramList
-          .add(new Pair<>(ConnectorParams.ACTION_PARAM, action));
-      paramList.add(new Pair<>(ConnectorParams.EXECID_PARAM, String
-          .valueOf(executionId)));
-      paramList.add(new Pair<>(ConnectorParams.USER_PARAM, user));
+      paramList.add(new Pair<>(ConnectorParams.ACTION_PARAM, action));
+      if (executionId != null) {
+    	  paramList.add(new Pair<>(ConnectorParams.EXECID_PARAM, String.valueOf(executionId)));
+      }
+      if (user != null) {
+    	  paramList.add(new Pair<>(ConnectorParams.USER_PARAM, user));  
+      }
 
       return callForJsonObjectMap(host, port, "/executor", paramList);
     } catch (final IOException e) {
@@ -127,22 +133,18 @@ public class ExecutorApiGateway {
 
   public Map<String, Object> updateExecutions(final Executor executor,
       final List<ExecutableFlow> executions) throws ExecutorManagerException {
-    final List<Long> updateTimesList = new ArrayList<>();
-    final List<Integer> executionIdsList = new ArrayList<>();
+	
+	@SuppressWarnings("unchecked")
+	Pair<String, String>[] params = new Pair[2 * executions.size()];
     // We pack the parameters of the same host together before query
+	int i = 0;
     for (final ExecutableFlow flow : executions) {
-      executionIdsList.add(flow.getExecutionId());
-      updateTimesList.add(flow.getUpdateTime());
+    	params[i++] = new Pair<>(ConnectorParams.UPDATE_TIME_LIST_PARAM, String.valueOf(flow.getUpdateTime()));
+    	params[i++] = new Pair<>(ConnectorParams.EXEC_ID_LIST_PARAM, String.valueOf(flow.getExecutionId()));
     }
-    final Pair<String, String> updateTimes = new Pair<>(
-        ConnectorParams.UPDATE_TIME_LIST_PARAM,
-        JSONUtils.toJSON(updateTimesList));
-    final Pair<String, String> executionIds = new Pair<>(
-        ConnectorParams.EXEC_ID_LIST_PARAM,
-        JSONUtils.toJSON(executionIdsList));
 
     return callWithExecutionId(executor.getHost(), executor.getPort(),
-        ConnectorParams.UPDATE_ACTION, null, null, executionIds, updateTimes);
+        ConnectorParams.UPDATE_ACTION, null, null, params);
   }
 
 }
