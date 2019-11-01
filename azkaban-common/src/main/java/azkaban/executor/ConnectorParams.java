@@ -29,15 +29,16 @@ public interface ConnectorParams {
   public static final String CANCEL_ACTION = "cancel";
   public static final String PAUSE_ACTION = "pause";
   public static final String RESUME_ACTION = "resume";
-  public static final String PING_ACTION = "ping";
   public static final String LOG_ACTION = "log";
   public static final String ATTACHMENTS_ACTION = "attachments";
   public static final String METADATA_ACTION = "metadata";
-  public static final String RELOAD_JOBTYPE_PLUGINS_ACTION = "reloadJobTypePlugins";
-  public static final String ACTIVATE = "activate";
-  public static final String DEACTIVATE = "deactivate";
-  public static final String GET_STATUS = "getStatus";
-  public static final String SHUTDOWN = "shutdown";
+  
+  public static final String PING_ACTION = "-/ping";
+  public static final String RELOAD_JOBTYPE_PLUGINS_ACTION = "-/reloadJobTypePlugins";
+  public static final String ACTIVATE = "=/activate";
+  public static final String DEACTIVATE = "-/deactivate";
+  public static final String GET_STATUS = "-/status";
+  public static final String SHUTDOWN = "-/shutdown";
 
   public static final String MODIFY_EXECUTION_ACTION = "modifyExecution";
   public static final String MODIFY_EXECUTION_ACTION_TYPE = "modifyType";

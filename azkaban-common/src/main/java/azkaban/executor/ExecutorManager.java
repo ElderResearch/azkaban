@@ -226,7 +226,7 @@ public class ExecutorManager extends EventHandler implements
       final Future<ExecutorInfo> fetchExecutionInfo =
           this.executorInfoRefresherService.submit(
               () -> this.apiGateway.callForJsonType(executor.getHost(),
-                  executor.getPort(), "/serverStatistics", null, ExecutorInfo.class));
+                  executor.getPort(), "/executor/-/stats", null, ExecutorInfo.class));
       futures.add(new Pair<>(executor,
           fetchExecutionInfo));
     }

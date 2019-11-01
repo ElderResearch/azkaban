@@ -71,7 +71,7 @@ public class ExecJettyServerModule extends AbstractModule {
     root.addServlet(new ServletHolder(new ExecutorServlet()), "/executor");
     root.addServlet(new ServletHolder(new JMXHttpServlet()), "/jmx");
     root.addServlet(new ServletHolder(new StatsServlet()), "/stats");
-    root.addServlet(new ServletHolder(new ServerStatisticsServlet()), "/serverStatistics");
+    root.addServlet(new ServletHolder(new ServerStatisticsServlet()), "/executor/-/stats");
     return root;
   }
 
