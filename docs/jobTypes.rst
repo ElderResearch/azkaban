@@ -1168,14 +1168,16 @@ To change the statistic collection at run time, the following options
 are available
 
 -  To change the time interval at which the specific type of statistics
-   are collected -
+   are collected
    /stats?action=changeMetricInterval&metricName=NumRunningJobMetric&interval=60000
 -  To change the duration at which the statistics are maintained
-   -/stats?action=changeCleaningInterval&interval=604800000
--  To change the number of data points to display -
+   /stats?action=changeCleaningInterval&interval=604800000
+-  To change the number of data points to display
    /stats?action=changeEmitterPoints&numInstances=50
--  To enable the statistic collection - /stats?action=enableMetrics
--  To disable the statistic collection - /stats?action=disableMetrics
+-  To enable the statistic collection
+   /stats?action=enableMetrics
+-  To disable the statistic collection
+   /stats?action=disableMetrics
 
 --------------
 
