@@ -35,7 +35,7 @@ public interface ConnectorParams {
   
   public static final String PING_ACTION = "-/ping";
   public static final String RELOAD_JOBTYPE_PLUGINS_ACTION = "-/reloadJobTypePlugins";
-  public static final String ACTIVATE = "=/activate";
+  public static final String ACTIVATE = "-/activate";
   public static final String DEACTIVATE = "-/deactivate";
   public static final String GET_STATUS = "-/status";
   public static final String SHUTDOWN = "-/shutdown";
