@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  #parse("azkaban/webapp/servlet/velocity/style.vm")
+  #parse("azkaban/webapp/servlet/velocity/javascript.vm")
+
+  <link rel="stylesheet" type="text/css" href="${context}/css/bootstrap-datetimepicker.css"/>
+  
+  <style type="text/css">
+	  #tabcontent {
+	    display: none;
+	  	padding: 6px 12px;
+	  	border: 1px solid #ccc;
+	  	border-top: none;
+	  }
+  </style>
+
+  <script type="text/javascript" src="${context}/js/moment.min.js"></script>
+  <script type="text/javascript" src="${context}/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="${context}/js/jquery/jquery.tablesorter.js"></script>
+  
+  <script type="text/javascript" src="${context}/js/azkaban/view/ceptorsourcedetail.js"></script>
+  <script type="text/javascript" src="${context}/js/azkaban/view/history.js"></script>
+</head>
+<body>
+
+  #set ($current_page="ceptorsourcedetail")
+  #parse ("azkaban/webapp/servlet/velocity/nav.vm")
+
+  #if ($errorMsg)
+    #parse ("azkaban/webapp/servlet/velocity/errormsg.vm")
+  #else
+
+  ## Page header.
+    
+  ## Page content.
+
+  <div class="az-page-header">
+    <div class="container-full">
+      <div class="row">
+        <div class="header-title">
+          <h1>Source Details</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-full">
+  	<div class="tab" style="overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1;">
+  		<button class="tablinks" onclick="openDetail(event, 'Overview')"
+  		style="background-color: Azure;float: left;border: none;outline: none;cursor: pointer;padding: 14px 16px;transition: 0.3s">
+  			Overview Stats
+  		</button>
+  		<button class="tablinks" onclick="openDetail(event, 'History')"
+  		style="background-color: Azure;float: left;border: none;outline: none;cursor: pointer;padding: 14px 16px;transition: 0.3s">
+  			Trigger History
+  		</button>
+	</div>
+  
+  	<div id="Overview" class="tabcontent">
+  		<fieldset style="border: 2px black solid">
+			<legend style="margin-left: 1em; padding: 0.2em 0.8em; width: auto">Source Stats</legend>
+  			Source Name      Events Streamed       Last Date Stamp      Peak Events/Sec <br>
+  			val              val                   val                  val <br>
+  			PLACEHOLDER <br>
+  		</fieldset>
+  		<br><br>
+  		<fieldset style="border: 2px black solid">
+			<legend style="margin-left: 1em; padding: 0.2em 0.8em; width: auto">Trigger Counters</legend>
+  			Trigger One       Cnt. <br>
+  			Trigger Two       Cnt. <br>
+  			Trigger Three     Cnt. <br>
+  			PLACEHOLDER <br>
+  		</fieldset>
+  		<br><br>
+  		<fieldset style="border: 2px black solid">
+			<legend style="margin-left: 1em; padding: 0.2em 0.8em; width: auto">Actor Counters</legend>
+  			Actor One       Cnt. <br>
+  			Actor Two       Cnt. <br>
+  			Actor Three     Cnt. <br>
+  			PLACEHOLDER <br>
+  		</fieldset>
+  	</div>
+  	
+  	<div id="History" class="tabcontent">
+  		<fieldset style="border: 2px black solid">
+			<legend style="margin-left: 1em; padding: 0.2em 0.8em; width: auto">Trigger History</legend>
+  			PLACEHOLDER <br>
+  		</fieldset>
+  	</div>
+  </div><!-- /container-full -->
+  #end
+</body>
+<html>

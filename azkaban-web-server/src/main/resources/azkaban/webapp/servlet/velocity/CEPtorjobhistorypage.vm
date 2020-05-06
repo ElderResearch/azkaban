@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  #parse("azkaban/webapp/servlet/velocity/style.vm")
+  #parse("azkaban/webapp/servlet/velocity/javascript.vm")
+
+  <link rel="stylesheet" type="text/css" href="${context}/css/bootstrap-datetimepicker.css"/>
+
+  <script type="text/javascript" src="${context}/js/moment.min.js"></script>
+  <script type="text/javascript" src="${context}/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="${context}/js/jquery/jquery.tablesorter.js"></script>
+</head>
+<body>
+
+  #set ($current_page="ceptorjobhistory")
+  #parse ("azkaban/webapp/servlet/velocity/nav.vm")
+
+  #if ($errorMsg)
+    #parse ("azkaban/webapp/servlet/velocity/errormsg.vm")
+  #else
+
+  ## Page header.
+    
+  ## Page content.
+
+  <div class="az-page-header">
+    <div class="container-full">
+      <div class="row">
+        <div class="header-title">
+          <h1>Job Execution History</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-full">
+  	<div>
+        <table class="table table-bordered table-condensed table-hover">
+          <thead>
+          <tr>
+            <th class="Job">Jobs</th>
+          </tr>
+          <tr>
+		    <td>JOB ABC-01 PLACEHOLDER</td><br>
+		  </tr>
+		  <tr>
+		    <td>JOB ABC-02 PLACEHOLDER</td><br>
+		  </tr>
+		  <tr>
+		    <td>JOB ABC-03 PLACEHOLDER</td><br>
+		  </tr>
+		  <tr>
+		    <td>JOB ABC-04 PLACEHOLDER</td><br>
+		  </tr>
+		  <tr>
+		    <td>JOB ABC-05 PLACEHOLDER</td><br>
+		  </tr>
+		</table>
+    </div>
+  </div><!-- /container-full -->
+  #end
+</body>
+<html>

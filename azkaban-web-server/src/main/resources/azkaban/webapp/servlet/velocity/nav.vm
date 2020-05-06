@@ -132,7 +132,18 @@
                                                  onClick="navMenuClick('$!context/flowtrigger')">
             <a
                 href="$!context/flowtrigger">Flow Trigger Schedule</a></li>
-
+          <!-- ERI BEGIN -->
+          <li#if($current_page == 'ceptorjobhistory') class="active"#end
+                                                 onClick="navMenuClick('$!context/ceptorjobhistory')">
+            <a
+                href="$!context/ceptorjobhistory">Ceptor Stats</a></li>
+                
+          <!-- temporary to be rerouted later RYAN -->
+          <li#if($current_page == 'ceptorsourcedetail') class="active"#end
+                                                 onClick="navMenuClick('$!context/ceptorsourcedetail')">
+            <a
+                href="$!context/ceptorsourcedetail">Ceptor Source Detail Mockup</a></li>
+		  <!-- ERI END -->
           #foreach ($viewer in $viewers)
             #if (!$viewer.hidden)
               <li#if($current_page == $viewer.pluginName) class="active"#end

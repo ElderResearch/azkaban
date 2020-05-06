@@ -1,5 +1,5 @@
 <azkaban-users>
-  <user groups="azkaban" password="azkaban" roles="admin" username="azkaban"/>
+  <user groups="azkaban" password="azkaban" roles="admin" username="azkabanuser"/>
   <user password="metrics" roles="metrics" username="metrics"/>
 
   <role name="admin" permissions="ADMIN"/>
