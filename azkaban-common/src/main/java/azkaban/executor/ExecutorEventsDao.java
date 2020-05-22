@@ -50,15 +50,15 @@ public class ExecutorEventsDao {
     }
   }
 
-  public List<ExecutorLogEvent> getExecutorEvents(final Executor executor, final int num,
+  public List<ExecutorLogEvent> getExecutorEvents(final int executionId, final int num,
       final int offset)
       throws ExecutorManagerException {
     try {
       return this.dbOperator.query(ExecutorLogsResultHandler.SELECT_EXECUTOR_EVENTS_ORDER,
-          new ExecutorLogsResultHandler(), executor.getId(), num, offset);
+          new ExecutorLogsResultHandler(), executionId, num, offset);
     } catch (final SQLException e) {
       throw new ExecutorManagerException(
-          "Failed to fetch events for executor id : " + executor.getId(), e);
+          "Failed to fetch events for execution id : " + executionId, e);
     }
   }
 

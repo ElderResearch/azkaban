@@ -163,8 +163,8 @@ public interface ExecutorLoader {
 
   /**
    * <pre>
-   * This method is to fetch events recorded in executor audit table, inserted
-   * by postExecutorEvents with a given executor, starting from skip
+   * This method is to fetch events recorded from the executor, inserted
+   * by postExecutorEvents with a given execution.
    * Note:-
    * 1. throws an Exception in case of a SQL issue
    * 2. Returns an empty list in case of no events
@@ -172,7 +172,7 @@ public interface ExecutorLoader {
    *
    * @return List<ExecutorLogEvent>
    */
-  List<ExecutorLogEvent> getExecutorEvents(Executor executor, int num,
+  List<ExecutorLogEvent> getExecutorEvents(int executionId, int num,
       int offset) throws ExecutorManagerException;
 
   void addActiveExecutableReference(ExecutionReference ref)

@@ -320,9 +320,9 @@ public class JdbcExecutorLoader implements ExecutorLoader {
   }
 
   @Override
-  public List<ExecutorLogEvent> getExecutorEvents(final Executor executor, final int num,
+  public List<ExecutorLogEvent> getExecutorEvents(final int executionId, final int num,
       final int offset) throws ExecutorManagerException {
-    return this.executorEventsDao.getExecutorEvents(executor, num, offset);
+    return this.executorEventsDao.getExecutorEvents(executionId, num, offset);
   }
 
   @Override

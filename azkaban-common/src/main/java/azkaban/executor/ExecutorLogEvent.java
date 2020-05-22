@@ -30,7 +30,8 @@ import lombok.Getter;
 @Data
 public class ExecutorLogEvent {
 
-  private final int executorId;
+  private final int executionId;
+  private final int id;
   private final String user;
   private final Date time;
   private final EventType type;
@@ -44,7 +45,7 @@ public class ExecutorLogEvent {
   @AllArgsConstructor @Getter
   public enum EventType {
     ERROR(128), HOST_UPDATE(1), PORT_UPDATE(2), ACTIVATION(3), INACTIVATION(4),
-    CREATED(5);
+    CREATED(5), TRIGGER_COUNT(6), SOURCE_COUNT(7);
 
     private final int numVal;
 
@@ -61,6 +62,10 @@ public class ExecutorLogEvent {
           return INACTIVATION;
         case 5:
           return CREATED;
+        case 6:
+            return TRIGGER_COUNT;
+        case 7:
+            return SOURCE_COUNT;
         case 128:
           return ERROR;
         default:
