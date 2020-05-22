@@ -39,3 +39,6 @@ currentpid
 
 #python
 __pycache__/
+
+
+.dbeaver/
