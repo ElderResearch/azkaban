@@ -532,4 +532,10 @@ public class MockExecutorLoader implements ExecutorLoader {
   @Override
   public void unsetExecutorIdForExecution(final int executionId) {
   }
+
+@Override
+public List<ExecutorLogEvent> getExecutorEvents(int executionId, int num, int offset) throws ExecutorManagerException {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

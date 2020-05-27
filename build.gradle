@@ -23,7 +23,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.cinnober.gradle:semver-git:2.2.3'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
+        //classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.14'
     }
 }
 
@@ -124,16 +124,16 @@ ext.deps = [
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'net.ltgt.errorprone'
+    //apply plugin: 'net.ltgt.errorprone'
 
     // Set the same version for all sub-projects to root project version
     version = rootProject.version
 
-    configurations.errorprone {
+    /*configurations.errorprone {
         dependencies {
             errorprone 'com.google.errorprone:error_prone_core:2.1.0'
         }
-    }
+    }*/
 
     plugins.withType(JavaPlugin) {
         sourceCompatibility = JavaVersion.VERSION_1_8

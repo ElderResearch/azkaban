@@ -93,7 +93,7 @@ jooq {
         properties {
           property {
             key = 'scripts'
-            value = 'src/main/sql/*.sql'
+            value = 'src/main/sql/create*.sql'
           }
         }
       }
