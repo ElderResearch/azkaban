@@ -1,6 +1,6 @@
 CREATE TABLE executor_events (
   execution_id  INT      NOT NULL,
-  id			INT;
+  id			INT,
   event_type    TINYINT  NOT NULL,
   event_time    DATETIME NOT NULL,
   username      VARCHAR(64),
