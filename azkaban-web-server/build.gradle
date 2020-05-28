@@ -46,6 +46,7 @@ npm_cache_clean {
 apply plugin: 'lesscss'
 apply plugin: 'dustjs'
 apply plugin: 'distribution'
+apply plugin: 'nu.studer.jooq'
 
 configurations {
     generateRestli

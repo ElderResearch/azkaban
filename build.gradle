@@ -30,6 +30,7 @@ buildscript {
 plugins {
     id 'com.gradle.build-scan' version '3.3.1'
     id 'com.github.kt3k.coveralls' version '2.6.3'
+    id 'nu.studer.jooq' version '4.2'
     id 'jacoco'
 }
 

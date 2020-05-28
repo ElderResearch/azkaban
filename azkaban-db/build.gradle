@@ -14,11 +14,9 @@
  * the License.
  *
  */
-plugins {
-    id 'nu.studer.jooq' version '4.2'
-}
  
 apply plugin: 'distribution'
+apply plugin: 'nu.studer.jooq'
 
 task testJar(type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
