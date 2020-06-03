@@ -1,27 +1,20 @@
 package azkaban.webapp.servlet;
 
-import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
-import azkaban.db.schema.tables.interfaces.IExecutionMetrics;
-import azkaban.db.schema.tables.pojos.ExecutionMetrics;
-import azkaban.executor.ExecutableFlow;
-import azkaban.executor.ExecutorManagerAdapter;
-import azkaban.executor.ExecutorManagerException;
-import azkaban.project.ProjectManager;
-import azkaban.server.session.Session;
-import azkaban.webapp.AzkabanWebServer;
-import lombok.Getter;
-//import org.jooq.impl.DAOImpl;
-
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.joda.time.format.DateTimeFormat;
 
 import com.google.common.collect.Lists;
+
+import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
+import azkaban.db.schema.tables.interfaces.IExecutionMetrics;
+import azkaban.db.schema.tables.pojos.ExecutionMetrics;
+import azkaban.server.session.Session;
+import azkaban.webapp.AzkabanWebServer;
+import lombok.Getter;
 
 
 

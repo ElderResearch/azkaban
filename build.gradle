@@ -44,7 +44,6 @@ compareGradleBuilds {
 
 allprojects {
     apply plugin: 'jacoco'
-    apply plugin: 'nu.studer.jooq'
 
     repositories {
         mavenCentral()

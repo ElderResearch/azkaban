@@ -73,6 +73,8 @@ dependencies {
     testCompile project(':test')
     testCompile project(path: ':azkaban-db', configuration: 'testOutput')
     testRuntime deps.h2
+    
+    implementation 'org.jooq:jooq'
 }
 
 sourceSets {
