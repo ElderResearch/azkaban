@@ -10,6 +10,7 @@ import azkaban.project.ProjectManager;
 import azkaban.server.session.Session;
 import azkaban.webapp.AzkabanWebServer;
 import lombok.Getter;
+//import org.jooq.impl.DAOImpl;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -72,11 +73,13 @@ public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 
 	@Getter
 	private static class ExecutionMetricView extends ExecutionMetrics{
-		private String color;
+		private long metricValue;
+		private long timestamp;
 		
 		public ExecutionMetricView(IExecutionMetrics m) {
 			from(m);
-			color = m.getValue().intValue() > 10 ? "#FFFFFF" : "#ABCDEF";
+			metricValue = m.getValue().longValue();
+			timestamp = m.getMetricTime().longValue();
 		}
 
 	}

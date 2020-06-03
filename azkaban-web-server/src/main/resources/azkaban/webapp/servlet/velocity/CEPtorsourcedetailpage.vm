@@ -40,7 +40,7 @@
     <div class="container-full">
       <div class="row">
         <div class="header-title">
-          <h1>Source Details</h1>
+          <h1>Job Details</h1>
         </div>
       </div>
     </div>
@@ -86,7 +86,18 @@
   	<div id="History" class="tabcontent">
   		<fieldset style="border: 2px black solid">
 			<legend style="margin-left: 1em; padding: 0.2em 0.8em; width: auto">Trigger History</legend>
-  			PLACEHOLDER <br>
+  			#if (!$metrics.isEmpty())
+              #foreach ($metric in $metrics)
+              <tr>
+                <td class="tb-name">
+                  Triggers fired:
+                </td>
+                <td class="tb-name execId">
+                  ${metric.metricValue}
+                </td>
+              </tr>
+              #end
+            #end
   		</fieldset>
   	</div>
   </div><!-- /container-full -->
