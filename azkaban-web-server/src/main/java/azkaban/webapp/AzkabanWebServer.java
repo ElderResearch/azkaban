@@ -22,6 +22,7 @@ import azkaban.AzkabanCommonModule;
 import azkaban.Constants;
 import azkaban.Constants.ConfigurationKeys;
 import azkaban.database.AzkabanDatabaseSetup;
+import azkaban.database.DataSourceUtils;
 import azkaban.executor.ExecutionController;
 import azkaban.executor.ExecutorManager;
 import azkaban.executor.ExecutorManagerAdapter;
@@ -95,6 +96,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.jmx.HierarchyDynamicMBean;
 import org.apache.velocity.app.VelocityEngine;
 import org.joda.time.DateTimeZone;
+import org.jooq.Configuration;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DefaultConfiguration;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.DefaultServlet;
@@ -586,6 +590,12 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   @Override
   public Props getServerProps() {
     return this.props;
+  }
+  
+  public Configuration getJooqConfiguration() {
+	  return new DefaultConfiguration()
+			  .set(DataSourceUtils.getDataSource(this.props))
+			  .set(SQLDialect.MYSQL); //TODO: configure to use database.type --Ryan S.
   }
 
   public Map<String, TriggerPlugin> getTriggerPlugins() {

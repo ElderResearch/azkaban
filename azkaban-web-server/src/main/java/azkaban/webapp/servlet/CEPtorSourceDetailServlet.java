@@ -7,6 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jooq.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Lists;
 
 import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
@@ -15,14 +19,13 @@ import azkaban.db.schema.tables.pojos.ExecutionMetrics;
 import azkaban.server.session.Session;
 import azkaban.webapp.AzkabanWebServer;
 import lombok.Getter;
+import lombok.val;
 
 
 
 public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 
-	/**
-	 * 
-	 */
+	private static final Logger logger = LoggerFactory.getLogger(CEPtorSourceDetailServlet.class.getName());
 	private static final long serialVersionUID = 1L;
 	private ExecutionMetricsDao metricsDao;
 	
@@ -30,9 +33,9 @@ public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 	  public void init(final ServletConfig config) throws ServletException {
 	    super.init(config);
 	    final AzkabanWebServer server = (AzkabanWebServer) getApplication();
-	    //this.executorManagerAdapter = server.getExecutorManager();
-	   
-	    //this.projectManager = server.getProjectManager();
+
+	    
+		metricsDao = new ExecutionMetricsDao(server.getJooqConfiguration());
 	  }
 
 	@Override
@@ -48,12 +51,15 @@ public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 		int executionId = getIntParam(req, EXECUTION_ID_PARAM, 0);
 		
 		if(executionId == 0) {
-			// Handle default with no execution ID
+			//TODO Handle default with no execution ID
 		}
 		
 		
-		page.add("metrics",Lists.transform(metricsDao.fetchByExecutionId(executionId),
-				ExecutionMetricView::new));
+		val results = Lists.transform(metricsDao.fetchByExecutionId(executionId),ExecutionMetricView::new);
+		page.add("metrics",results);
+		
+		logger.info("results: " + results.toString());
+		logger.info("exection_id: {}", executionId);
 		
 		page.render();
 		
