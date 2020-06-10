@@ -152,6 +152,8 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   private final FlowTriggerScheduler scheduler;
   private final FlowTriggerService flowTriggerService;
   private Map<String, TriggerPlugin> triggerPlugins;
+  private final Configuration jooqConfiguration;
+
 
   @Inject
   public AzkabanWebServer(final Props props,
@@ -181,6 +183,9 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     this.statusService = statusService;
     this.scheduler = requireNonNull(scheduler, "scheduler is null.");
     this.flowTriggerService = requireNonNull(flowTriggerService, "flow trigger service is null");
+    this.jooqConfiguration = new DefaultConfiguration()
+			  .set(DataSourceUtils.getDataSource(this.props))
+			  .set(SQLDialect.MYSQL);
 
     loadBuiltinCheckersAndActions();
 
@@ -593,9 +598,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   }
   
   public Configuration getJooqConfiguration() {
-	  return new DefaultConfiguration()
-			  .set(DataSourceUtils.getDataSource(this.props))
-			  .set(SQLDialect.MYSQL); //TODO: configure to use database.type --Ryan S.
+	  return this.jooqConfiguration;
   }
 
   public Map<String, TriggerPlugin> getTriggerPlugins() {
