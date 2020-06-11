@@ -93,7 +93,9 @@
                   Triggers fired:
                 </td>
                 <td class="tb-name execId">
-                  ${metric.metricValue}
+                  ##!{metric}
+                  <br>
+                  ${metric.value}
                 </td>
               </tr>
               #end

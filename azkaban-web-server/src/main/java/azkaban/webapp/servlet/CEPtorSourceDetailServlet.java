@@ -19,6 +19,7 @@ import azkaban.db.schema.tables.pojos.ExecutionMetrics;
 import azkaban.server.session.Session;
 import azkaban.webapp.AzkabanWebServer;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.val;
 
 
@@ -58,9 +59,13 @@ public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 		val results = Lists.transform(metricsDao.fetchByExecutionId(executionId),ExecutionMetricView::new);
 		page.add("metrics",results);
 		
-		logger.info("results: " + results.toString());
+		//logger.info("results: " + results);
 		logger.info("exection_id: {}", executionId);
 		
+		for(val result:results) {
+			logger.info("results: " + result.toString());
+			logger.info("result value: {}", result.getValue());
+		}
 		page.render();
 		
 	}
@@ -70,15 +75,12 @@ public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 			throws ServletException, IOException {		
 	}
 
-	@Getter
+	@Getter @ToString(callSuper = true)
 	private static class ExecutionMetricView extends ExecutionMetrics{
-		private long metricValue;
-		private long timestamp;
+		private static final long serialVersionUID = 2L;
 		
 		public ExecutionMetricView(IExecutionMetrics m) {
 			from(m);
-			metricValue = m.getValue().longValue();
-			timestamp = m.getMetricTime().longValue();
 		}
 
 	}
