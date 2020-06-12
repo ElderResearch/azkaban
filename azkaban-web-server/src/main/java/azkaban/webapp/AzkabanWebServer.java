@@ -185,7 +185,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     this.flowTriggerService = requireNonNull(flowTriggerService, "flow trigger service is null");
     this.jooqConfiguration = new DefaultConfiguration()
 			  .set(DataSourceUtils.getDataSource(this.props))
-			  .set(SQLDialect.valueOf(props.getString("database.type","mysql").toUpperCase()));
+			  .set(SQLDialect.valueOf(props.getString("database.type").toUpperCase()));
 
     loadBuiltinCheckersAndActions();
 
