@@ -59,7 +59,6 @@ public class CEPtorSourceDetailServlet extends LoginAbstractAzkabanServlet{
 		val results = Lists.transform(metricsDao.fetchByExecutionId(executionId),ExecutionMetricView::new);
 		page.add("metrics",results);
 		
-		//logger.info("results: " + results);
 		logger.info("exection_id: {}", executionId);
 		
 		for(val result:results) {
