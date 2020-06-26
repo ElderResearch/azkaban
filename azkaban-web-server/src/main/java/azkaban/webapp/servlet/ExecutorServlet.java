@@ -54,6 +54,7 @@ import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.WebMetrics;
 import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.ViewerPlugin;
+import azkaban.webapp.view.ExecutionMetricView;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.val;
@@ -398,6 +399,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 		return;
 	}
 	
+	// CEPtor specific - for populating CEPtor visualizations
 	val results = Lists.transform(metricsDao.fetchByExecutionId(triggerInst.getFlowExecId()),
 			ExecutionMetricView::new);
 	page.add("metrics", results);
@@ -451,6 +453,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     page.add("execid", execId);
     page.add("triggerInstanceId", "-1");
     
+    // CEPtor specific - for populating CEPtor visualizations
     val results = Lists.transform(metricsDao.fetchByExecutionId(execId),ExecutionMetricView::new);
 	page.add("metrics",results);
 
@@ -1014,16 +1017,5 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
       e.printStackTrace();
       ret.put("error", "Error on update Ramp. " + e.getMessage());
     }
-  }
-  
-  @Getter @ToString(callSuper = true)
-	private static class ExecutionMetricView extends ExecutionMetrics{
-		private static final long serialVersionUID = 2L;
-		
-		public ExecutionMetricView(IExecutionMetrics m) {
-			from(m);
-		}
-
-	}
-  
+  }  
 }
