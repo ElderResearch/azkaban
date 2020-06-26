@@ -60,7 +60,6 @@ import azkaban.webapp.plugin.TriggerPlugin;
 import azkaban.webapp.plugin.ViewerPlugin;
 import azkaban.webapp.servlet.AbstractAzkabanServlet;
 import azkaban.webapp.servlet.CEPtorJobHistoryServlet;
-import azkaban.webapp.servlet.CEPtorSourceDetailServlet;
 import azkaban.webapp.servlet.ExecutorServlet;
 import azkaban.webapp.servlet.FlowTriggerInstanceServlet;
 import azkaban.webapp.servlet.FlowTriggerServlet;
@@ -443,7 +442,6 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     root.addServlet(new ServletHolder(new FlowTriggerInstanceServlet()), "/flowtriggerinstance");
     root.addServlet(new ServletHolder(new FlowTriggerServlet()), "/flowtrigger");
     root.addServlet(new ServletHolder(new CEPtorJobHistoryServlet()), "/ceptorjobhistory");
-    root.addServlet(new ServletHolder(new CEPtorSourceDetailServlet()), "/ceptorsourcedetail");
 
     final ServletHolder restliHolder = new ServletHolder(new RestliServlet());
     restliHolder.setInitParameter("resourcePackages", "azkaban.restli");

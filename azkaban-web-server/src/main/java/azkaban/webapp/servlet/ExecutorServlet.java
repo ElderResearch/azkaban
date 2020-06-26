@@ -18,6 +18,9 @@ package azkaban.webapp.servlet;
 import static azkaban.ServiceProvider.SERVICE_PROVIDER;
 
 import azkaban.Constants;
+import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
+import azkaban.db.schema.tables.interfaces.IExecutionMetrics;
+import azkaban.db.schema.tables.pojos.ExecutionMetrics;
 import azkaban.executor.ConnectorParams;
 import azkaban.executor.ExecutableFlow;
 import azkaban.executor.ExecutableFlowBase;
@@ -51,6 +54,11 @@ import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.WebMetrics;
 import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.ViewerPlugin;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.val;
+
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +73,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
+
 
 public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 
@@ -76,6 +86,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
   private ExecutorManagerAdapter executorManagerAdapter;
   private ScheduleManager scheduleManager;
   private UserManager userManager;
+  private ExecutionMetricsDao metricsDao;
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
@@ -88,6 +99,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     this.flowTriggerService = server.getFlowTriggerService();
     // TODO: reallocf fully guicify
     this.webMetrics = SERVICE_PROVIDER.getInstance(WebMetrics.class);
+    this.metricsDao = new ExecutionMetricsDao(server.getJooqConfiguration());
   }
 
   @Override
@@ -367,23 +379,28 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
   }
 
   private void handleExecutionFlowPageByTriggerInstanceId(final HttpServletRequest req,
-      final HttpServletResponse resp, final Session session) throws ServletException,
-      IOException {
-    final Page page =
-        newPage(req, resp, session,
-            "azkaban/webapp/servlet/velocity/executingflowpage.vm");
-    final User user = session.getUser();
-    final String triggerInstanceId = getParam(req, "triggerinstanceid");
+			final HttpServletResponse resp, final Session session) 
+					throws ServletException, IOException {
+	final Page page = 
+			newPage(req, resp, session, 
+					"azkaban/webapp/servlet/velocity/executingflowpage.vm");
 
-    final TriggerInstance triggerInst = this.flowTriggerService
-        .findTriggerInstanceById(triggerInstanceId);
+	final User user = session.getUser();
+	final String triggerInstanceId = getParam(req, "triggerinstanceid");
 
-    if (triggerInst == null) {
-      page.add("errorMsg", "Error loading trigger instance " + triggerInstanceId
-          + " not found.");
-      page.render();
-      return;
-    }
+	final TriggerInstance triggerInst = this.flowTriggerService
+			.findTriggerInstanceById(triggerInstanceId);
+
+	if (triggerInst == null) {
+		page.add("errorMsg", "Error loading trigger instance " + triggerInstanceId 
+				+ " not found.");
+		page.render();
+		return;
+	}
+	
+	val results = Lists.transform(metricsDao.fetchByExecutionId(triggerInst.getFlowExecId()),
+			ExecutionMetricView::new);
+	page.add("metrics", results);
 
     page.add("triggerInstanceId", triggerInstanceId);
     page.add("execid", triggerInst.getFlowExecId());
@@ -433,6 +450,9 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     final int execId = getIntParam(req, "execid");
     page.add("execid", execId);
     page.add("triggerInstanceId", "-1");
+    
+    val results = Lists.transform(metricsDao.fetchByExecutionId(execId),ExecutionMetricView::new);
+	page.add("metrics",results);
 
     ExecutableFlow flow = null;
     try {
@@ -995,4 +1015,15 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
       ret.put("error", "Error on update Ramp. " + e.getMessage());
     }
   }
+  
+  @Getter @ToString(callSuper = true)
+	private static class ExecutionMetricView extends ExecutionMetrics{
+		private static final long serialVersionUID = 2L;
+		
+		public ExecutionMetricView(IExecutionMetrics m) {
+			from(m);
+		}
+
+	}
+  
 }
