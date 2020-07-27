@@ -35,6 +35,8 @@
   <script type="text/javascript" src="${context}/js/azkaban/view/flow-execute-dialog.js?v=1569610022"></script>
   <script type="text/javascript" src="${context}/js/azkaban/view/flow-stats.js"></script>
   <script type="text/javascript" src="${context}/js/azkaban/view/exflow.js?v=1569610022"></script>
+  
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <script type="text/javascript">
     var contextURL = "${context}";
     var currentTime = ${currentTime};
@@ -260,6 +262,9 @@
   ## Stats view.
 
   <div class="container-full" id="statsView">
+  <div id="triggerChart1" style="height: 250px;"></div>
+  ##<div id="placeholder" style="height: 100px;"></div>
+  ##<div id="triggerChart2" style="height: 300px;"></div>
     <div id="flow-stats-container">
       <div class="row">
         <div class="col-lg-12">
@@ -334,5 +339,32 @@
     #parse ("azkaban/webapp/servlet/velocity/messagedialog.vm")
   </div>
   #end
+  
+  <script type="text/javascript">
+  	var metrics = document.getElementsByClassName("metricList");
+  	var triggerData = []
+  	
+  	// DUMMY DATA
+  	triggerData = [
+	    { time: '2008', value: 20 },
+	    { time: '2009', value: 10 },
+	    { time: '2010', value: 5 },
+	    { time: '2011', value: 5 },
+	    { time: '2012', value: 20 },
+	  ];
+  
+	new Morris.Line({
+	  // ID of the element in which to draw the chart.
+	  element: 'triggerChart1',
+	  data: triggerData,
+	  // The name of the data record attribute that contains x-values.
+	  xkey: 'time',
+	  // A list of names of data record attributes that contain y-values.
+	  ykeys: ['value'],
+	  // Labels for the ykeys -- will be displayed when hovering over the
+	  // chart.
+	  labels: ['Value']
+	});
+  </script>
 </body>
 </html>
