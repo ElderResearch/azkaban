@@ -278,6 +278,7 @@
 			            <th>Trigger</th>
 			            <th>Fires</th>
 			            <th>Time</th>
+			            <th>Description</th>
 			          </tr>
 		          </thead>
 		          <tbody>
