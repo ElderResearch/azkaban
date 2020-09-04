@@ -16,7 +16,6 @@
 
 package azkaban.user;
 
-import com.sun.nio.file.SensitivityWatchEventModifier;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -29,21 +28,14 @@ import java.util.List;
 public class FileWatcher {
 
   private final WatchService watchService;
-  private final SensitivityWatchEventModifier sensitivity;
 
   public FileWatcher() throws IOException {
-    this(SensitivityWatchEventModifier.MEDIUM);
-  }
-
-  public FileWatcher(final SensitivityWatchEventModifier sensitivity) throws IOException {
-    this.sensitivity = sensitivity;
     this.watchService = FileSystems.getDefault().newWatchService();
   }
 
   public WatchKey register(final Path dir) throws IOException {
     return dir.register(this.watchService,
-        new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_MODIFY},
-        this.sensitivity);
+        new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_MODIFY});
   }
 
   public void close() throws IOException {

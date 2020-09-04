@@ -1,5 +1,4 @@
 CREATE TABLE ceptor_output (
-  source_id        INT,
   event_source     INT,
   event_id         INT,
   event_timestamp TIMESTAMP,
@@ -7,5 +6,5 @@ CREATE TABLE ceptor_output (
   trigger_version  INT NOT NULL,
   actor_id         INT NOT NULL,
   output_context   VARCHAR(1024),
-  outout_offset    INT
+  output_offset    INT
 );
