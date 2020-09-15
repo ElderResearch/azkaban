@@ -16,11 +16,32 @@
 package azkaban.webapp.servlet;
 
 import static azkaban.ServiceProvider.SERVICE_PROVIDER;
+import static azkaban.db.schema.tables.CeptorTriggerAggregates.CEPTOR_TRIGGER_AGGREGATES;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.jooq.DSLContext;
+import org.jooq.tools.JooqLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Lists;
 
 import azkaban.Constants;
 import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
-import azkaban.db.schema.tables.interfaces.IExecutionMetrics;
-import azkaban.db.schema.tables.pojos.ExecutionMetrics;
+import azkaban.db.schema.tables.interfaces.ICeptorTriggerAggregates;
+import azkaban.db.schema.tables.pojos.CeptorTriggerAggregates;
 import azkaban.executor.ConnectorParams;
 import azkaban.executor.ExecutableFlow;
 import azkaban.executor.ExecutableFlowBase;
@@ -54,27 +75,9 @@ import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.WebMetrics;
 import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.ViewerPlugin;
+import azkaban.webapp.view.CeptorTriggerAggregatesView;
 import azkaban.webapp.view.ExecutionMetricView;
-import lombok.Getter;
-import lombok.ToString;
 import lombok.val;
-
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
 
 
 public class ExecutorServlet extends LoginAbstractAzkabanServlet {
@@ -88,6 +91,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
   private ScheduleManager scheduleManager;
   private UserManager userManager;
   private ExecutionMetricsDao metricsDao;
+  private DSLContext sql;
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
@@ -101,6 +105,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     // TODO: reallocf fully guicify
     this.webMetrics = SERVICE_PROVIDER.getInstance(WebMetrics.class);
     this.metricsDao = new ExecutionMetricsDao(server.getJooqConfiguration());
+    this.sql = server.getJooqConfiguration().dsl();
   }
 
   @Override
@@ -403,6 +408,12 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 	val results = Lists.transform(metricsDao.fetchByExecutionId(triggerInst.getFlowExecId()),
 			ExecutionMetricView::new);
 	page.add("metrics", results);
+	
+	val triggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+			CeptorTriggerAggregatesView::new);
+	page.add("cep_trigger_counts", triggerAggregates);
+	
+	// CEPtor specific - end
 
     page.add("triggerInstanceId", triggerInstanceId);
     page.add("execid", triggerInst.getFlowExecId());
