@@ -347,7 +347,11 @@
 		                  ${trigger.description}
 		                </td>
 		                <td>
-		                  ${trigger.count}
+		                  #if (!${trigger.count})
+		                    0
+		                  #else
+		                    ${trigger.count}
+		                  #end
 		                </td>
 		              </tr>
 		              #end
