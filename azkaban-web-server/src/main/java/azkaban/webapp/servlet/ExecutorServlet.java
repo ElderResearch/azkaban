@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jooq.DSLContext;
-import org.jooq.tools.JooqLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +39,6 @@ import com.google.common.collect.Lists;
 
 import azkaban.Constants;
 import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
-import azkaban.db.schema.tables.interfaces.ICeptorTriggerAggregates;
-import azkaban.db.schema.tables.pojos.CeptorTriggerAggregates;
 import azkaban.executor.ConnectorParams;
 import azkaban.executor.ExecutableFlow;
 import azkaban.executor.ExecutableFlowBase;
@@ -407,11 +404,13 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 	// CEPtor specific - for populating CEPtor visualizations
 	val results = Lists.transform(metricsDao.fetchByExecutionId(triggerInst.getFlowExecId()),
 			ExecutionMetricView::new);
-	page.add("metrics", results);
 	
+	//TODO will need to add filtering when changes added for >1 project
 	val triggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
 			CeptorTriggerAggregatesView::new);
-	page.add("cep_trigger_counts", triggerAggregates);
+	
+	page.add("cepTriggerCounts", triggerAggregates);
+	page.add("metrics", results);
 	
 	// CEPtor specific - end
 
@@ -466,7 +465,15 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     
     // CEPtor specific - for populating CEPtor visualizations
     val results = Lists.transform(metricsDao.fetchByExecutionId(execId),ExecutionMetricView::new);
+	
+	//TODO will need to add filtering when changes added for >1 project
+	val triggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+			CeptorTriggerAggregatesView::new);
+	
+	// CEPtor specific - end
+	
 	page.add("metrics",results);
+	page.add("cepTriggerCounts", triggerAggregates);
 
     ExecutableFlow flow = null;
     try {
