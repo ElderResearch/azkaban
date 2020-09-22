@@ -17,6 +17,7 @@ package azkaban.webapp.servlet;
 
 import static azkaban.ServiceProvider.SERVICE_PROVIDER;
 import static azkaban.db.schema.tables.CeptorTriggerAggregates.CEPTOR_TRIGGER_AGGREGATES;
+import static azkaban.db.schema.tables.CeptorOutput.CEPTOR_OUTPUT;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.WebMetrics;
 import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.ViewerPlugin;
+import azkaban.webapp.view.CeptorOutputView;
 import azkaban.webapp.view.CeptorTriggerAggregatesView;
 import azkaban.webapp.view.ExecutionMetricView;
 import lombok.val;
@@ -102,6 +104,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     // TODO: reallocf fully guicify
     this.webMetrics = SERVICE_PROVIDER.getInstance(WebMetrics.class);
     this.metricsDao = new ExecutionMetricsDao(server.getJooqConfiguration());
+    
     this.sql = server.getJooqConfiguration().dsl();
   }
 
@@ -402,15 +405,15 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 	}
 	
 	// CEPtor specific - for populating CEPtor visualizations
-	val results = Lists.transform(metricsDao.fetchByExecutionId(triggerInst.getFlowExecId()),
+	val ceptorMetrics = Lists.transform(metricsDao.fetchByExecutionId(triggerInst.getFlowExecId()),
 			ExecutionMetricView::new);
 	
 	//TODO will need to add filtering when changes added for >1 project
-	val triggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+	val ceptorTriggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
 			CeptorTriggerAggregatesView::new);
 	
-	page.add("cepTriggerCounts", triggerAggregates);
-	page.add("metrics", results);
+	page.add("cepTriggerCounts", ceptorTriggerAggregates);
+	page.add("metrics", ceptorMetrics);
 	
 	// CEPtor specific - end
 
@@ -464,16 +467,21 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     page.add("triggerInstanceId", "-1");
     
     // CEPtor specific - for populating CEPtor visualizations
-    val results = Lists.transform(metricsDao.fetchByExecutionId(execId),ExecutionMetricView::new);
+    val ceptorMetrics = Lists.transform(metricsDao.fetchByExecutionId(execId), ExecutionMetricView::new);
 	
 	//TODO will need to add filtering when changes added for >1 project
-	val triggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+	val ceptorTriggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
 			CeptorTriggerAggregatesView::new);
+	
+	//TODO change hardcoded number of rows fetched for ceptor output table
+	val ceptorOutputTable = Lists.transform(sql.selectFrom(CEPTOR_OUTPUT).limit(100).fetch(), 
+			CeptorOutputView::new);
 	
 	// CEPtor specific - end
 	
-	page.add("metrics",results);
-	page.add("cepTriggerCounts", triggerAggregates);
+	page.add("metrics",ceptorMetrics);
+	page.add("cepTriggerCounts", ceptorTriggerAggregates);
+	page.add("cepOutputTable", ceptorOutputTable);
 
     ExecutableFlow flow = null;
     try {
