@@ -453,13 +453,21 @@
   	var triggerData = []
   	
   	// DUMMY DATA
-  	triggerData = [
-	    { time: '2008', value: 20 },
-	    { time: '2009', value: 10 },
-	    { time: '2010', value: 5 },
-	    { time: '2011', value: 5 },
-	    { time: '2012', value: 20 },
-	  ];
+  	//triggerData = [
+	//    { time: '2008', value: 20 },
+	//    { time: '2009', value: 10 },
+	//    { time: '2010', value: 5 },
+	//    { time: '2011', value: 5 },
+	//    { time: '2012', value: 20 },
+	//  ];
+	  
+	triggerData = [
+		#foreach ($metric in $metrics)
+		{ time: ${metric.metricTime}, value: ${metric.value} },
+		#end
+	];
+	
+	console.log(triggerData);
   
 	new Morris.Line({
 	  // ID of the element in which to draw the chart.
@@ -471,7 +479,10 @@
 	  ykeys: ['value'],
 	  // Labels for the ykeys -- will be displayed when hovering over the
 	  // chart.
-	  labels: ['Value']
+	  labels: ['Value'],
+	  xLabelFormat: function (d) {
+    		return new Date(d).toLocaleDateString();
+    		},
 	});
   </script>
 </body>
