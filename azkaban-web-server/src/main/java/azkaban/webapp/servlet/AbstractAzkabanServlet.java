@@ -336,7 +336,7 @@ public abstract class AbstractAzkabanServlet extends HttpServlet {
   protected Page newPage(final HttpServletRequest req, final HttpServletResponse resp,
       final String template) {
     final Page page = new Page(req, resp, getApplication().getVelocityEngine(), template);
-    page.add("version", jarVersion);
+    page.add("version", this.displayVersion);
     page.add("azkaban_name", this.name);
     page.add("azkaban_label", this.label);
     page.add("azkaban_color", this.color);
