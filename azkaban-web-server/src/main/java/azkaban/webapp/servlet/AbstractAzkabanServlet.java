@@ -17,6 +17,23 @@ package azkaban.webapp.servlet;
 
 import static azkaban.ServiceProvider.SERVICE_PROVIDER;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+
 import azkaban.Constants.ConfigurationKeys;
 import azkaban.server.AzkabanServer;
 import azkaban.server.HttpRequestUtils;
@@ -28,19 +45,6 @@ import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.TriggerPlugin;
 import azkaban.webapp.plugin.ViewerPlugin;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.joda.time.DateTime;
 
 /**
  * Base Servlet for pages
@@ -48,8 +52,8 @@ import org.joda.time.DateTime;
 public abstract class AbstractAzkabanServlet extends HttpServlet {
 
   public static final String JSON_MIME_TYPE = "application/json";
-  public static final String jarVersion = AbstractAzkabanServlet.class.getPackage()
-      .getImplementationVersion();
+  public static final String jarVersion = StringUtils.defaultString(AbstractAzkabanServlet.class.getPackage()
+      .getImplementationVersion(), "unknown");
   private static final String AZKABAN_SUCCESS_MESSAGE =
       "azkaban.success.message";
   private static final String AZKABAN_WARN_MESSAGE =
@@ -63,7 +67,6 @@ public abstract class AbstractAzkabanServlet extends HttpServlet {
   private String name;
   private String label;
   private String color;
-  private String displayVersion;
 
   private List<ViewerPlugin> viewerPlugins;
   private List<TriggerPlugin> triggerPlugins;
@@ -107,7 +110,6 @@ public abstract class AbstractAzkabanServlet extends HttpServlet {
     this.name = props.getString("azkaban.name", "");
     this.label = props.getString("azkaban.label", "");
     this.color = props.getString("azkaban.color", "#FF0000");
-    this.displayVersion = props.getString("azkaban.version", jarVersion);
     this.passwordPlaceholder = props.getString("azkaban.password.placeholder", "Password");
     this.displayExecutionPageSize = props.getInt(ConfigurationKeys.DISPLAY_EXECUTION_PAGE_SIZE, 16);
 
@@ -284,7 +286,7 @@ public abstract class AbstractAzkabanServlet extends HttpServlet {
   protected Page newPage(final HttpServletRequest req, final HttpServletResponse resp,
       final Session session, final String template) {
     final Page page = new Page(req, resp, getApplication().getVelocityEngine(), template);
-    page.add("version", displayVersion);
+    page.add("version", jarVersion);
     page.add("azkaban_name", this.name);
     page.add("azkaban_label", this.label);
     page.add("azkaban_color", this.color);
@@ -336,7 +338,7 @@ public abstract class AbstractAzkabanServlet extends HttpServlet {
   protected Page newPage(final HttpServletRequest req, final HttpServletResponse resp,
       final String template) {
     final Page page = new Page(req, resp, getApplication().getVelocityEngine(), template);
-    page.add("version", this.displayVersion);
+    page.add("version", this.jarVersion);
     page.add("azkaban_name", this.name);
     page.add("azkaban_label", this.label);
     page.add("azkaban_color", this.color);

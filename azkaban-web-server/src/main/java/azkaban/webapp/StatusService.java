@@ -66,12 +66,11 @@ public class StatusService {
   }
 
   public Status getStatus() {
-    final String version = jarVersion == null ? "unknown" : jarVersion;
     final Runtime runtime = Runtime.getRuntime();
     final long usedMemory = runtime.totalMemory() - runtime.freeMemory();
 
     // Build the status object
-    return new Status(version,
+    return new Status(jarVersion,
         getPid(),
         getInstallationPath(),
         usedMemory,

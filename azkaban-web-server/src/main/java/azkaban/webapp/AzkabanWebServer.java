@@ -97,6 +97,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.joda.time.DateTimeZone;
 import org.jooq.Configuration;
 import org.jooq.SQLDialect;
+import org.jooq.conf.RenderNameCase;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DefaultConfiguration;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
@@ -152,6 +154,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   private final FlowTriggerService flowTriggerService;
   private Map<String, TriggerPlugin> triggerPlugins;
   private final Configuration jooqConfiguration;
+  private final Settings jooqSettings;
 
 
   @Inject
@@ -182,9 +185,11 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     this.statusService = statusService;
     this.scheduler = requireNonNull(scheduler, "scheduler is null.");
     this.flowTriggerService = requireNonNull(flowTriggerService, "flow trigger service is null");
+    this.jooqSettings = new Settings().withRenderNameCase(RenderNameCase.LOWER);
     this.jooqConfiguration = new DefaultConfiguration()
-			  .set(DataSourceUtils.getDataSource(this.props))
-			  .set(SQLDialect.valueOf(props.getString("database.type").toUpperCase()));
+    	.set(jooqSettings)
+    	.set(DataSourceUtils.getDataSource(this.props))
+    	.set(SQLDialect.valueOf(props.getString("database.type").toUpperCase()));
 
     loadBuiltinCheckersAndActions();
 
