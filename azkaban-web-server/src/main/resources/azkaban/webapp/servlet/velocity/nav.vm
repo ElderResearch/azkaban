@@ -103,7 +103,7 @@
       <div class="navbar-logo">
         <a href="${context}/">CEPtor</a>
         <div class="navbar-version">
-          ${version}
+        Demo
         </div>
       </div>
 
@@ -171,6 +171,7 @@
                 class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="$!context?logout">Logout</a></li>
+              <li><div style="color: grey;padding: 1em;border-top: 1px solid grey;">version: ${version}</div>
             </ul>
           </li>
         </ul>
