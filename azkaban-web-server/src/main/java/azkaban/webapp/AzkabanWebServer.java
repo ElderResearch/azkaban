@@ -73,6 +73,8 @@ import azkaban.webapp.servlet.ScheduleServlet;
 import azkaban.webapp.servlet.StatsServlet;
 import azkaban.webapp.servlet.StatusServlet;
 import azkaban.webapp.servlet.TriggerManagerServlet;
+import lombok.val;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.linkedin.restli.server.RestliServlet;
@@ -134,6 +136,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   private static final int MAX_FORM_CONTENT_SIZE = 10 * 1024 * 1024;
   private static final String DEFAULT_TIMEZONE_ID = "default.timezone.id";
   private static final String DEFAULT_STATIC_DIR = "";
+  private static final String CEPTOR_SCHEMA = ""; //TODO something like "_ceptor", for example
 
   @Deprecated
   private static AzkabanWebServer app;
@@ -185,11 +188,9 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     this.statusService = statusService;
     this.scheduler = requireNonNull(scheduler, "scheduler is null.");
     this.flowTriggerService = requireNonNull(flowTriggerService, "flow trigger service is null");
+    
     this.jooqSettings = new Settings().withRenderNameCase(RenderNameCase.LOWER);
-    this.jooqConfiguration = new DefaultConfiguration()
-    	.set(jooqSettings)
-    	.set(DataSourceUtils.getDataSource(this.props))
-    	.set(SQLDialect.valueOf(props.getString("database.type").toUpperCase()));
+    this.jooqConfiguration = configureJooq(CEPTOR_SCHEMA);
 
     loadBuiltinCheckersAndActions();
 
@@ -212,7 +213,23 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     configureMBeanServer();
   }
 
-  @Deprecated
+  /**
+ * @param dbNameAppend string to append to default database name to get the ceptor
+ * specific database name. (empty String if using same database for both)
+ * @return jooq configuration
+ */
+private Configuration configureJooq(String dbNameAppend) {
+	Props propsCopy = new Props(this.props);
+	propsCopy.put("mysql.database", this.props.getString("mysql.database") + dbNameAppend);
+	val azDataSource = DataSourceUtils.getDataSource(propsCopy);
+	logger.info("Azkaban web server database name for jooq set to: " + propsCopy.getString("mysql.database"));
+	return new DefaultConfiguration()
+    	.set(jooqSettings)
+    	.set(azDataSource)
+    	.set(SQLDialect.valueOf(props.getString("database.type").toUpperCase()));
+}
+
+@Deprecated
   public static AzkabanWebServer getInstance() {
     return app;
   }
