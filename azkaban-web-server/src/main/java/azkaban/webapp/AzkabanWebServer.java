@@ -59,7 +59,6 @@ import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.TriggerPlugin;
 import azkaban.webapp.plugin.ViewerPlugin;
 import azkaban.webapp.servlet.AbstractAzkabanServlet;
-import azkaban.webapp.servlet.CEPtorJobHistoryServlet;
 import azkaban.webapp.servlet.ExecutorServlet;
 import azkaban.webapp.servlet.FlowTriggerInstanceServlet;
 import azkaban.webapp.servlet.FlowTriggerServlet;
@@ -73,6 +72,8 @@ import azkaban.webapp.servlet.ScheduleServlet;
 import azkaban.webapp.servlet.StatsServlet;
 import azkaban.webapp.servlet.StatusServlet;
 import azkaban.webapp.servlet.TriggerManagerServlet;
+import azkaban.webapp.servlet.ceptor.AbstractCEPtorServlet;
+import azkaban.webapp.servlet.ceptor.CEPtorJobHistoryServlet;
 import lombok.val;
 
 import com.google.inject.Guice;
@@ -157,7 +158,6 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   private final FlowTriggerService flowTriggerService;
   private Map<String, TriggerPlugin> triggerPlugins;
   private final Configuration jooqConfiguration;
-  private final Settings jooqSettings;
 
 
   @Inject
@@ -189,8 +189,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     this.scheduler = requireNonNull(scheduler, "scheduler is null.");
     this.flowTriggerService = requireNonNull(flowTriggerService, "flow trigger service is null");
     
-    this.jooqSettings = new Settings().withRenderNameCase(RenderNameCase.LOWER);
-    this.jooqConfiguration = configureJooq(CEPTOR_SCHEMA);
+    this.jooqConfiguration = AbstractCEPtorServlet.configureCEPtorDataConnection(this.props);
 
     loadBuiltinCheckersAndActions();
 
@@ -212,22 +211,6 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
 
     configureMBeanServer();
   }
-
-  /**
- * @param dbNameAppend string to append to default database name to get the ceptor
- * specific database name. (empty String if using same database for both)
- * @return jooq configuration
- */
-private Configuration configureJooq(String dbNameAppend) {
-	Props propsCopy = new Props(this.props);
-	propsCopy.put("mysql.database", this.props.getString("mysql.database") + dbNameAppend);
-	val azDataSource = DataSourceUtils.getDataSource(propsCopy);
-	logger.info("Azkaban web server database name for jooq set to: " + propsCopy.getString("mysql.database"));
-	return new DefaultConfiguration()
-    	.set(jooqSettings)
-    	.set(azDataSource)
-    	.set(SQLDialect.valueOf(props.getString("database.type").toUpperCase()));
-}
 
 @Deprecated
   public static AzkabanWebServer getInstance() {
