@@ -23,6 +23,7 @@ import azkaban.Constants;
 import azkaban.Constants.ConfigurationKeys;
 import azkaban.database.AzkabanDatabaseSetup;
 import azkaban.database.DataSourceUtils;
+import azkaban.db.ceptor.CeptorDataSource;
 import azkaban.executor.ExecutionController;
 import azkaban.executor.ExecutorManager;
 import azkaban.executor.ExecutorManagerAdapter;
@@ -158,6 +159,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
   private final FlowTriggerService flowTriggerService;
   private Map<String, TriggerPlugin> triggerPlugins;
   private final Configuration jooqConfiguration;
+  private final CeptorDataSource ceptorDataSource;
 
 
   @Inject
@@ -190,6 +192,7 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
     this.flowTriggerService = requireNonNull(flowTriggerService, "flow trigger service is null");
     
     this.jooqConfiguration = AbstractCEPtorServlet.configureCEPtorDataConnection(this.props);
+    this.ceptorDataSource = new CeptorDataSource(this.props);
 
     loadBuiltinCheckersAndActions();
 
@@ -604,7 +607,11 @@ public class AzkabanWebServer extends AzkabanServer implements IMBeanRegistrable
 	  return this.jooqConfiguration;
   }
 
-  public Map<String, TriggerPlugin> getTriggerPlugins() {
+  public CeptorDataSource getCeptorDataSource() {
+	return ceptorDataSource;
+}
+
+public Map<String, TriggerPlugin> getTriggerPlugins() {
     return this.triggerPlugins;
   }
 

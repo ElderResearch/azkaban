@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Lists;
 
 import azkaban.Constants;
+import azkaban.db.ceptor.CeptorDataSource;
 import azkaban.db.schema.tables.daos.ExecutionMetricsDao;
 import azkaban.executor.ConnectorParams;
 import azkaban.executor.ExecutableFlow;
@@ -90,7 +91,8 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
   private ScheduleManager scheduleManager;
   private UserManager userManager;
   private ExecutionMetricsDao metricsDao;
-  private DSLContext sql;
+  private DSLContext azkabanSql;
+  private CeptorDataSource ceptorDataSource;
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
@@ -105,7 +107,8 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     this.webMetrics = SERVICE_PROVIDER.getInstance(WebMetrics.class);
     this.metricsDao = new ExecutionMetricsDao(server.getJooqConfiguration());
     
-    this.sql = server.getJooqConfiguration().dsl();
+    this.azkabanSql = server.getJooqConfiguration().dsl();
+    this.ceptorDataSource = server.getCeptorDataSource();
   }
 
   @Override
@@ -409,7 +412,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 			ExecutionMetricView::new);
 	
 	//TODO will need to add filtering when changes added for >1 project
-	val ceptorTriggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+	val ceptorTriggerAggregates = Lists.transform(azkabanSql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
 			CeptorTriggerAggregatesView::new);
 	
 	page.add("cepTriggerCounts", ceptorTriggerAggregates);
@@ -470,11 +473,11 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     val ceptorMetrics = Lists.transform(metricsDao.fetchByExecutionId(execId), ExecutionMetricView::new);
 	
 	//TODO will need to add filtering when changes added for >1 project
-	val ceptorTriggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+	val ceptorTriggerAggregates = Lists.transform(azkabanSql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
 			CeptorTriggerAggregatesView::new);
 	
 	//TODO change hardcoded number of rows fetched for ceptor output table
-	val ceptorOutputTable = Lists.transform(sql.selectFrom(CEPTOR_OUTPUT).limit(100).fetch(), 
+	val ceptorOutputTable = Lists.transform(azkabanSql.selectFrom(CEPTOR_OUTPUT).limit(100).fetch(), 
 			CeptorOutputView::new);
 	
 	// CEPtor specific - end

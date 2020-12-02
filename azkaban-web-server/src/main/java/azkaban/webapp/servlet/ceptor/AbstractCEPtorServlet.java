@@ -17,15 +17,15 @@ public abstract class AbstractCEPtorServlet extends LoginAbstractAzkabanServlet 
 	private static final Configuration jooqConfig = new DefaultConfiguration().set(jooqSettings);
 
 	public static Configuration configureCEPtorDataConnection(Props p) {
-		return jooqConfig.derive(ceptorDataSource(p))
+		return jooqConfig.derive(azkabanToCeptorDataSource(p))
+				// if using azkaban's datasource:
 				.set(SQLDialect.valueOf(p.getString("database.type").toUpperCase()));
 	}
 	
-	private static AzkabanDataSource ceptorDataSource(Props p) {
-		//TODO move away from hard coded string to point jooq.Configuration at new data source
-		Props propsCopy = new Props();
-		propsCopy.put("mysql.database", p.getString("mysql.database") + "_ceptor");
+	private static AzkabanDataSource azkabanToCeptorDataSource(Props p) {
+		Props propsCopy = new Props(p);
+		//this is how one would modify the MySQL connection database:
+		//propsCopy.put("mysql.database", p.getString("mysql.database") + "_ceptor");
 		return DataSourceUtils.getDataSource(propsCopy);
 	}
-
 }
