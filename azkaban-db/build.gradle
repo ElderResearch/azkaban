@@ -18,6 +18,10 @@
 apply plugin: 'distribution'
 apply plugin: 'nu.studer.jooq'
 
+repositories {
+	mavenCentral()
+}
+
 task testJar(type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
     classifier = 'test'
@@ -39,7 +43,7 @@ dependencies {
     compile deps.dbcp2
     compile deps.io
 
-    implementation 'org.jooq:jooq'
+    implementation 'org.jooq:jooq:3.13.1'
   	jooqRuntime 'org.jooq:jooq-meta-extensions:3.13.1'
 
     testCompile project(path: ':az-core', configuration: 'testOutput')

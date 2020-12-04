@@ -39,6 +39,7 @@ dependencies {
     compile deps.metricsJvm
     compile deps.mysqlConnector
     compile deps.snakeyaml
+    compile deps.sqlite
     compile deps.velocity
 
     testRuntime deps.h2
