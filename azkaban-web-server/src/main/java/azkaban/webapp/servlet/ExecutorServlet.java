@@ -20,6 +20,7 @@ import static azkaban.db.schema.tables.CeptorTriggerAggregates.CEPTOR_TRIGGER_AG
 import static azkaban.db.schema.tables.CeptorOutput.CEPTOR_OUTPUT;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     this.webMetrics = SERVICE_PROVIDER.getInstance(WebMetrics.class);
     this.metricsDao = new ExecutionMetricsDao(server.getJooqConfiguration());
     
+    //TODO check if needed after switch to SQLite outputs for ceptor
     this.azkabanSql = server.getJooqConfiguration().dsl();
     this.ceptorDataSource = server.getCeptorDataSource();
   }
@@ -469,23 +471,6 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     page.add("execid", execId);
     page.add("triggerInstanceId", "-1");
     
-    // CEPtor specific - for populating CEPtor visualizations
-    val ceptorMetrics = Lists.transform(metricsDao.fetchByExecutionId(execId), ExecutionMetricView::new);
-	
-	//TODO will need to add filtering when changes added for >1 project
-	val ceptorTriggerAggregates = Lists.transform(azkabanSql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
-			CeptorTriggerAggregatesView::new);
-	
-	//TODO change hardcoded number of rows fetched for ceptor output table
-	val ceptorOutputTable = Lists.transform(azkabanSql.selectFrom(CEPTOR_OUTPUT).limit(100).fetch(), 
-			CeptorOutputView::new);
-	
-	// CEPtor specific - end
-	
-	page.add("metrics",ceptorMetrics);
-	page.add("cepTriggerCounts", ceptorTriggerAggregates);
-	page.add("cepOutputTable", ceptorOutputTable);
-
     ExecutableFlow flow = null;
     try {
       flow = this.executorManagerAdapter.getExecutableFlow(execId);
@@ -524,6 +509,26 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
       logger.info("Flow {} not found in project {}.", flow.getFlowId(), project.getName());
     }
     page.add("isLocked", isCurrentFlowLocked);
+    
+    // CEPtor specific - for populating CEPtor visualizations
+    val ceptorMetrics = Lists.transform(metricsDao.fetchByExecutionId(execId), ExecutionMetricView::new);
+	page.add("metrics",ceptorMetrics);
+	
+	try (DSLContext sql = ceptorDataSource.getJobContext(projectId)) {
+		val ceptorOutputTable = Lists.transform(sql.selectFrom(CEPTOR_OUTPUT).limit(100).fetch(), 
+			CeptorOutputView::new);
+		
+		val ceptorTriggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),
+				CeptorTriggerAggregatesView::new);
+		
+		page.add("cepOutputTable", ceptorOutputTable);
+		page.add("cepTriggerCounts", ceptorTriggerAggregates);
+		
+	} catch (SQLException e) {
+		logger.warn("Unable to connect to ceptor output DB for project " + projectId);
+	}
+	// CEPtor specific - end
+
 
     page.render();
   }
