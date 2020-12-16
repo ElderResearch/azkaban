@@ -515,7 +515,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 	page.add("metrics",ceptorMetrics);
 	
 	try (DSLContext sql = ceptorDataSource.getJobContext(projectId)) {
-		val ceptorOutputTable = Lists.transform(sql.selectFrom(CEPTOR_OUTPUT).limit(100).fetch(), 
+		val ceptorOutputTable = Lists.transform(sql.selectFrom(CEPTOR_OUTPUT).fetch(), 
 			CeptorOutputView::new);
 		
 		val ceptorTriggerAggregates = Lists.transform(sql.selectFrom(CEPTOR_TRIGGER_AGGREGATES).fetch(),

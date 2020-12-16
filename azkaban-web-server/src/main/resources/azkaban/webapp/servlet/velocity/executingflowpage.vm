@@ -447,6 +447,8 @@
 	var triggerFireGridOptions = {
 	  columnDefs: triggerFireGridColumnDefs,
 	  rowData: triggerFireGridRowData,
+	  pagination: true,
+	  paginationAutoPageSize: true,
 	  defaultColDef: {
 	    resizable: true,
 	  },
@@ -458,7 +460,7 @@
 	    var triggerFireGridDiv = document.querySelector('#triggerFireGrid');
 	    
 	    new agGrid.Grid(triggerCountGridDiv, triggerCountGridOptions);
-	    new agGrid.Grid(triggerFireGridDiv, triggerFireGridOptions)
+	    new agGrid.Grid(triggerFireGridDiv, triggerFireGridOptions);
 	});
   </script>
 </body>
