@@ -120,8 +120,8 @@
 
     <ul class="nav nav-tabs nav-sm" id="headertabs">
       <li id="graphViewLink"><a href="#graph">Graph</a></li>
-      <li id="flowTriggerlistViewLink"><a href="#triggerslist">Flow Trigger List</a></li>
-      <li id="jobslistViewLink"><a href="#jobslist">Job List</a></li>
+      ## <li id="flowTriggerlistViewLink"><a href="#triggerslist">Flow Trigger List</a></li>
+      ## <li id="jobslistViewLink"><a href="#jobslist">Job List</a></li>
       <li id="flowLogViewLink"><a href="#log">Flow Log</a></li>
       <li id="statsViewLink"><a href="#stats">Stats</a></li>
       <li id="ceptorTriggerViewLink"><a href="#ceptortriggers">Ceptor Trigger Fires</a></li>
@@ -155,8 +155,9 @@
 
     #parse ("azkaban/webapp/servlet/velocity/flowgraphview.vm")
 
-  ## Flow Trigger List View
+  ## Old azkaban Flow Trigger List View
 
+  <!--
   <div class="container-full" id="flowTriggerListView">
     <div class="row">
       <div class="col-xs-12">
@@ -215,7 +216,7 @@
     </div><!-- /.row -->
   </div><!-- /.container-full -->
 
-  ## Job List View
+  ## old azkaban Job List View
 
   <div class="container-full" id="jobListView">
     <div class="row">
@@ -239,6 +240,8 @@
       </div><!-- /.col-xs-12 -->
     </div><!-- /.row -->
   </div><!-- /.container-full -->
+
+  --> ## Old azkaban views end
 
   ## Flow Log View
 
